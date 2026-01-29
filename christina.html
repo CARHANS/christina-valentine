@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Christina Obeid 💙</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body, html {
+  margin:0; padding:0; height:100%;
+  font-family: Arial, sans-serif;
+  overflow:hidden;
+  color:white;
+}
+
+/* BACKGROUND SLIDESHOW */
+.slideshow-container {
+  position:fixed; top:0; left:0;
+  width:100%; height:100%;
+  z-index:-3;
+}
+.slide {
+  position:absolute;
+  width:100%; height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 2s ease-in-out;
+}
+
+/* HEARTBEAT EFFECT */
+body:before {
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:rgba(255,0,100,0.04);
+  animation:heartbeat 2s infinite;
+  z-index:-2;
+}
+@keyframes heartbeat {
+  0% {opacity:0.03;}
+  25% {opacity:0.07;}
+  50% {opacity:0.03;}
+  75% {opacity:0.06;}
+  100% {opacity:0.03;}
+}
+
+/* MAIN BOX */
+.box {
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  background:rgba(0,0,0,0.6);
+  padding:25px;
+  border-radius:25px;
+  max-width:90%;
+}
+
+/* BUTTONS */
+button {
+  padding:12px 22px;
+  border:none;
+  border-radius:25px;
+  font-size:18px;
+  cursor:pointer;
+}
+#yes {background:pink;}
+#no {
+  background:white;
+  color:black;
+  position:absolute;
+}
+
+/* FALLING HEARTS */
+.heart {
+  position:fixed;
+  font-size:22px;
+  animation:fall 6s linear infinite;
+  pointer-events:none;
+}
+@keyframes fall {
+  0% {top:-10px; opacity:1;}
+  100% {top:110%; opacity:0;}
+}
+
+/* KITTENS */
+.kittens {
+  position:fixed;
+  bottom:5px;
+  width:55px;
+  left:50%;
+  transform:translateX(-50%);
+  opacity:0.85;
+  pointer-events:none;
+}
+
+/* FIREWORKS */
+.firework {
+  position:fixed;
+  font-size:26px;
+  animation:boom 2s ease-out forwards;
+}
+@keyframes boom {
+  0% {transform:scale(0); opacity:1;}
+  100% {transform:scale(3); opacity:0;}
+}
+
+/* PULL-UP TRACKER */
+#pullupBox {
+  position:fixed;
+  top:10px;
+  right:10px;
+  background:rgba(0,0,0,0.65);
+  padding:12px;
+  border-radius:12px;
+  font-size:14px;
+  max-width:220px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND SLIDES -->
+<div class="slideshow-container">
+  <img class="slide" src="photo1.jpg">
+  <img class="slide" src="photo2.jpg">
+  <img class="slide" src="photo3.jpg">
+</div>
+
+<!-- MUSIC -->
+<audio id="song" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- MAIN MESSAGE -->
+<div class="box">
+<h2>Christina Obeid 😌💙</h2>
+
+<p>
+Your eyes make me fall every single time I look at them…  
+your smile calms my restless heart in a way nothing else ever could 😩  
+and the way you exist so softly but so powerfully drives me insane in the best way possible 😈  
+I feel drawn to you in a way I can’t explain, and honestly… I don’t want to resist it 😌
+</p>
+
+<p>So tell me, Christina… will you be my Valentine and let me prove I’m worth the distraction? 💋</p>
+
+<button id="yes">Yes 💙</button>
+<button id="no">No 🙄</button>
+
+<div id="response" style="margin-top:10px;font-size:18px;"></div>
+
+<br>
+<input id="herMsg" placeholder="Leave Carlssy a message 💙" 
+style="padding:6px;border-radius:10px;border:none;width:80%;">
+<button onclick="saveMsg()">Save</button>
+
+</div>
+
+<!-- KITTENS -->
+<img src="kittens.gif" class="kittens">
+
+<!-- PULL-UP TRACKER -->
+<div id="pullupBox">
+<b>Christina’s Pull-Up Journey 💙</b><br>
+Goal: 1 Pull-Up 😌<br><br>
+
+<input type="number" step="0.1" id="pullInput" placeholder="Today's reps"
+style="width:95px;padding:5px;border-radius:8px;border:none;">
+<button onclick="savePull()">Save</button>
+
+<div style="background:#222;width:100%;height:10px;border-radius:10px;margin-top:8px;">
+  <div id="pullBar" style="height:10px;background:pink;width:0%;border-radius:10px;"></div>
+</div>
+
+<div id="pullText"></div>
+</div>
+
+<script>
+
+/* 🔥 PUT YOUR DISCORD WEBHOOK HERE */
+const DISCORD_WEBHOOK = "https://discordapp.com/api/webhooks/1466359610033307683/m3oAGjjUqa-B5bUAylodo0tkeRu5_9No247osD1j0r45asdd3EkFL_HiECAHychoM3RT";
+
+/* SEND TO DISCORD */
+function sendDiscord(msg){
+  fetch(DISCORD_WEBHOOK,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({content: msg})
+  }).catch(()=>{});
+}
+
+/* 🎧 AUTOPLAY MUSIC */
+const music = document.getElementById("song");
+function startMusic() {
+  music.volume = 0.95;
+  music.play().catch(()=>{});
+}
+document.addEventListener("click", startMusic);
+document.addEventListener("touchstart", startMusic);
+document.addEventListener("scroll", startMusic);
+window.onload = startMusic;
+
+/* 💕 FALLING HEARTS */
+setInterval(()=>{
+  let h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="💗";
+  h.style.left=Math.random()*100+"%";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+},250);
+
+/* 🖼 SLIDESHOW */
+let slides=document.querySelectorAll(".slide");
+let i=0;
+function showSlides(){
+  slides.forEach(s=>s.style.opacity=0);
+  slides[i].style.opacity=1;
+  i=(i+1)%slides.length;
+}
+showSlides();
+setInterval(showSlides,4000);
+
+/* 🏃 MOVING NO BUTTON */
+const no=document.getElementById("no");
+no.onmouseover=()=>{
+  no.style.left=Math.random()*80+"%";
+  no.style.top=Math.random()*80+"%";
+};
+
+/* 🎆 FIREWORKS */
+function fireworks(){
+  for(let i=0;i<25;i++){
+    let f=document.createElement("div");
+    f.className="firework";
+    f.innerHTML="🎆";
+    f.style.left=Math.random()*100+"%";
+    f.style.top=Math.random()*100+"%";
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),2000);
+  }
+}
+
+/* 💋 YES BUTTON */
+document.getElementById("yes").onclick=()=>{
+  document.getElementById("response").innerHTML=
+  "You just made Carlssy the happiest man alive 😈💙 I’m not letting you go now.";
+
+  startMusic();
+  fireworks();
+
+  // Romantic voice
+  let msg = new SpeechSynthesisUtterance("Christina, you just made me the happiest man alive. I feel something real with you.");
+  msg.rate=0.85;
+  msg.pitch=0.7;
+  msg.volume=1;
+  speechSynthesis.speak(msg);
+
+  sendDiscord("💙 CHRISTINA CLICKED YES 😈");
+};
+
+/* 🏋️‍♀️ PULL-UP TRACKER */
+function savePull(){
+  let reps=parseFloat(document.getElementById("pullInput").value);
+  if(isNaN(reps)) return;
+  let total=parseFloat(localStorage.getItem("pullups")||0);
+  total+=reps;
+  localStorage.setItem("pullups",total);
+  updatePull();
+  sendDiscord("Christina pull-up progress: " + total + " reps");
+}
+
+function updatePull(){
+  let total=parseFloat(localStorage.getItem("pullups")||0);
+  let percent=Math.min(total*100,100);
+  document.getElementById("pullBar").style.width=percent+"%";
+  document.getElementById("pullText").innerHTML=`Total: ${total.toFixed(2)} reps`;
+
+  if(total>=1){
+    alert("Christina just hit her FIRST pull-up 😈 Carlssy is insanely proud.");
+  }
+}
+updatePull();
+
+/* 💌 SAVE HER MESSAGE */
+function saveMsg(){
+  let m=document.getElementById("herMsg").value;
+  if(m.trim()=="") return;
+  let msgs=JSON.parse(localStorage.getItem("christinaMsgs")||"[]");
+  msgs.push(new Date().toLocaleString()+" : "+m);
+  localStorage.setItem("christinaMsgs",JSON.stringify(msgs));
+
+  sendDiscord("💌 Christina message: " + m);
+  alert("Saved for Carlssy 💙");
+}
+
+</script>
+
+</body>
+</html>
